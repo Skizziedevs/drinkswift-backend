@@ -1,10 +1,12 @@
 // routes/auth.js
 const jwt = require('jsonwebtoken');
 const router = require('express').Router();
+require('dotenv').config();
+
 
 const ADMIN_CREDENTIALS = {
-  email: process.env.ADMIN_EMAIL || 'ekene@drinkswift.com',
-  password: process.env.ADMIN_PASSWORD || 'Ekene.1111'
+  email: process.env.ADMIN_EMAIL, 
+  password: process.env.ADMIN_PASSWORD
 };
 
 router.post('/admin-login', (req, res) => {
