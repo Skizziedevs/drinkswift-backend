@@ -2,26 +2,12 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-// ✅ Get all products
 router.get("/", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM products");
-    res.json(rows);
+    const result = await db.query("SELECT * FROM products");
+    res.json(result.rows); // ✅ send only the actual rows
   } catch (err) {
-       console.error("Error:", err); // 👈 log it
-    res.status(500).json({ error: "Database error" });
-  }
-});
-
-// ✅ Get a single product by ID
-router.get("/:id", async (req, res) => {
-  try {
-    const [rows] = await db.query("SELECT * FROM products WHERE id = ?", [
-      req.params.id,
-    ]);
-    if (rows.length === 0) return res.status(404).json({ error: "Not found" });
-    res.json(rows[0]);
-  } catch (err) {
+    console.error("Error:", err);
     res.status(500).json({ error: "Database error" });
   }
 });
@@ -32,23 +18,25 @@ router.post("/", async (req, res) => {
     name,
     category,
     size,
-    packSize,
-    unitPrice,
-    packPrice,
+    packsize,
+    unitprice,
+    packprice,
     emoji,
     soldOut,
     image,
   } = req.body;
 
   try {
-    const [result] = await db.query(
+    const result = await db.query(
       `INSERT INTO products 
        (name, category, size, packSize, unitPrice, packPrice, emoji, soldOut, image) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       RETURNING id`,
       [name, category, size, packSize, unitPrice, packPrice, emoji, soldOut, image]
     );
-    res.json({ id: result.insertId, message: "Product created" });
+    res.json({ id: result.rows[0].id, message: "Product created" });
   } catch (err) {
+    console.error("Error:", err);
     res.status(500).json({ error: "Database error" });
   }
 });
@@ -59,9 +47,9 @@ router.put("/:id", async (req, res) => {
     name,
     category,
     size,
-    packSize,
-    unitPrice,
-    packPrice,
+    packsize,
+    unitprice,
+    packprice,
     emoji,
     soldOut,
     image,
@@ -69,11 +57,26 @@ router.put("/:id", async (req, res) => {
 
   try {
     await db.query(
-      `UPDATE products SET name=?, category=?, size=?, packSize=?, unitPrice=?, packPrice=?, emoji=?, soldOut=?, image=? WHERE id=?`,
-      [name, category, size, packSize, unitPrice, packPrice, emoji, soldOut, image, req.params.id]
+      `UPDATE products 
+       SET name=$1, category=$2, size=$3, packSize=$4, unitPrice=$5, 
+           packPrice=$6, emoji=$7, soldOut=$8, image=$9 
+       WHERE id=$10`,
+      [
+        name,
+        category,
+        size,
+        packsize,
+        unitprice,
+        packprice,
+        emoji,
+        soldOut,
+        image,
+        req.params.id,
+      ]
     );
     res.json({ message: "Product updated" });
   } catch (err) {
+    console.error("Error:", err);
     res.status(500).json({ error: "Database error" });
   }
 });
@@ -81,11 +84,11 @@ router.put("/:id", async (req, res) => {
 // ✅ Delete a product
 router.delete("/:id", async (req, res) => {
   try {
-    await db.query("DELETE FROM products WHERE id = ?", [req.params.id]);
+    await db.query("DELETE FROM products WHERE id = $1", [req.params.id]);
     res.json({ message: "Product deleted" });
   } catch (err) {
+    console.error("Error:", err);
     res.status(500).json({ error: "Database error" });
   }
 });
-
 module.exports = router;

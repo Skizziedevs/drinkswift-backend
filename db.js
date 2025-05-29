@@ -1,11 +1,11 @@
-
-const mysql = require("mysql2");
-
-const pool = mysql.createPool({
-   host: 'localhost',
-  user: 'root',
-  password: 'king1111',
-  database: 'drinkswift_db' 
+const { Pool } = require('pg');
+require('dotenv').config();
+const pool = new Pool({
+    user: 'postgres',
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
 });
 
-module.exports = pool.promise();
+module.exports = pool;
