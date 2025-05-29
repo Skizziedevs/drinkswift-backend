@@ -10,6 +10,6 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false } // Required for Neon
 });
 
-await pool.query('SET search_path TO public');
+
 
 module.exports = pool;

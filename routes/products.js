@@ -4,7 +4,7 @@ const db = require("../db");
 
 router.get("/", async (req, res) => {
   try {
-    const result = await db.query("SELECT * FROM products");
+    const result = await db.query("SELECT * FROM public.products");
     res.json(result.rows); // ✅ send only the actual rows
   } catch (err) {
     console.error("Error:", err);
@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
 
   try {
     const result = await db.query(
-      `INSERT INTO products 
+      `INSERT INTO public.products 
        (name, category, size, packSize, unitPrice, packPrice, emoji, soldOut, image) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING id`,
@@ -57,7 +57,7 @@ router.put("/:id", async (req, res) => {
 
   try {
     await db.query(
-      `UPDATE products 
+      `UPDATE public.products 
        SET name=$1, category=$2, size=$3, packSize=$4, unitPrice=$5, 
            packPrice=$6, emoji=$7, soldOut=$8, image=$9 
        WHERE id=$10`,
@@ -84,7 +84,7 @@ router.put("/:id", async (req, res) => {
 // ✅ Delete a product
 router.delete("/:id", async (req, res) => {
   try {
-    await db.query("DELETE FROM products WHERE id = $1", [req.params.id]);
+    await db.query("DELETE FROM public.products WHERE id = $1", [req.params.id]);
     res.json({ message: "Product deleted" });
   } catch (err) {
     console.error("Error:", err);
