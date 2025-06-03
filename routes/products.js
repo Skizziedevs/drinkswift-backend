@@ -30,7 +30,7 @@ router.post("/", async (req, res) => {
     const result = await db.query(
       `INSERT INTO public.products 
        (name, category, size, packsize, unitprice, packprice, soldOut, image) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING id`,
       [name, category, size, packsize, unitprice, packprice,  soldOut, image]
     );
@@ -59,7 +59,7 @@ router.put("/:id", async (req, res) => {
     await db.query(
       `UPDATE public.products 
        SET name=$1, category=$2, size=$3, packsize=$4, unitprice=$5, 
-           packprice=$6, emoji=$7, soldOut=$8, image=$9 
+           packprice=$6,  soldOut=$7, image=$8 
        WHERE id=$10`,
       [
         name,
