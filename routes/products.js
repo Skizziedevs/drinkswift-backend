@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
        (name, category, size, packsize, unitprice, packprice, soldOut, image) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING id`,
-      [name, category, size, packsize, unitprice, packprice, emoji, soldOut, image]
+      [name, category, size, packsize, unitprice, packprice,  soldOut, image]
     );
     res.json({ id: result.rows[0].id, message: "Product created" });
   } catch (err) {
