@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
     packsize,
     unitprice,
     packprice,
-    emoji,
+    
     soldOut,
     image,
   } = req.body;
@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
   try {
     const result = await db.query(
       `INSERT INTO public.products 
-       (name, category, size, packsize, unitprice, packprice, emoji, soldOut, image) 
+       (name, category, size, packsize, unitprice, packprice, soldOut, image) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING id`,
       [name, category, size, packsize, unitprice, packprice, emoji, soldOut, image]
@@ -50,7 +50,7 @@ router.put("/:id", async (req, res) => {
     packsize,
     unitprice,
     packprice,
-    emoji,
+    
     soldOut,
     image,
   } = req.body;
@@ -68,7 +68,7 @@ router.put("/:id", async (req, res) => {
         packsize,
         unitprice,
         packprice,
-        emoji,
+        
         soldOut,
         image,
         req.params.id,
