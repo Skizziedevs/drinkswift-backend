@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const verifyAdmin = require("../middleware/auth");
 
 // Auto-initialize orders table if not present
 const initOrdersTable = async () => {
@@ -36,7 +37,7 @@ const generateOrderRef = () => {
   return `CR-${random}`;
 };
 
-// Create a new order
+// Create a new order (PUBLIC: Customers submitting cart)
 router.post("/", async (req, res) => {
   const {
     name,
@@ -87,8 +88,8 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Get all orders (for Admin Dashboard)
-router.get("/", async (req, res) => {
+// Get all orders (PROTECTED: Admin only)
+router.get("/", verifyAdmin, async (req, res) => {
   try {
     const result = await db.query(
       "SELECT * FROM public.orders ORDER BY created_at DESC LIMIT 100"
@@ -100,8 +101,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Update order status (pending -> confirmed -> dispatched -> completed -> cancelled)
-router.patch("/:id/status", async (req, res) => {
+// Update order status (PROTECTED: Admin only)
+router.patch("/:id/status", verifyAdmin, async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 

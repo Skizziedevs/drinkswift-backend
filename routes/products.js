@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const verifyAdmin = require("../middleware/auth");
 
-// Get all products
+// Get all products (PUBLIC: Customers browsing catalog)
 router.get("/", async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM public.products ORDER BY id");
@@ -13,8 +14,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Create a new product
-router.post("/", async (req, res) => {
+// Create a new product (PROTECTED: Admin only)
+router.post("/", verifyAdmin, async (req, res) => {
   const {
     name,
     category,
@@ -22,11 +23,10 @@ router.post("/", async (req, res) => {
     packsize,
     unitprice,
     packprice,
-    soldOut = false, // default value
-    image = null,    // default value
+    soldOut = false,
+    image = null,
   } = req.body;
 
-  // Input validation
   if (!name || !category || unitprice === undefined) {
     return res.status(400).json({ error: "Missing required fields" });
   }
@@ -36,7 +36,7 @@ router.post("/", async (req, res) => {
       `INSERT INTO public.products 
        (name, category, size, packsize, unitprice, packprice, soldOut, image) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-       RETURNING *`, // Return all fields for confirmation
+       RETURNING *`,
       [
         name,
         category,
@@ -58,9 +58,9 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Batch update product prices and stock status
-router.put("/batch-prices", async (req, res) => {
-  const { updates } = req.body; // Array of { id, unitprice, packprice, soldOut }
+// Batch update product prices and stock status (PROTECTED: Admin only)
+router.put("/batch-prices", verifyAdmin, async (req, res) => {
+  const { updates } = req.body;
   if (!Array.isArray(updates) || updates.length === 0) {
     return res.status(400).json({ error: "No updates provided" });
   }
@@ -94,8 +94,8 @@ router.put("/batch-prices", async (req, res) => {
   }
 });
 
-// Update a product
-router.put("/:id", async (req, res) => {
+// Update a product (PROTECTED: Admin only)
+router.put("/:id", verifyAdmin, async (req, res) => {
   const { id } = req.params;
   const {
     name,
@@ -146,8 +146,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Delete a product
-router.delete("/:id", async (req, res) => {
+// Delete a product (PROTECTED: Admin only)
+router.delete("/:id", verifyAdmin, async (req, res) => {
   const { id } = req.params;
 
   if (!id || isNaN(id)) {
