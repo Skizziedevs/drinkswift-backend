@@ -56,6 +56,40 @@ router.post("/", async (req, res) => {
       details: err.code === '23505' ? 'Duplicate entry' : err.message 
     });
   }
+// Batch update product prices and stock status
+router.put("/batch-prices", async (req, res) => {
+  const { updates } = req.body; // Array of { id, unitprice, packprice, soldOut }
+  if (!Array.isArray(updates) || updates.length === 0) {
+    return res.status(400).json({ error: "No updates provided" });
+  }
+
+  const client = await db.connect();
+  try {
+    await client.query("BEGIN");
+    for (const item of updates) {
+      await client.query(
+        `UPDATE public.products 
+         SET unitprice = COALESCE($1, unitprice), 
+             packprice = COALESCE($2, packprice), 
+             soldOut = COALESCE($3, soldOut)
+         WHERE id = $4`,
+        [
+          item.unitprice !== undefined ? Number(item.unitprice) : null,
+          item.packprice !== undefined ? Number(item.packprice) : null,
+          item.soldOut !== undefined ? item.soldOut : null,
+          item.id
+        ]
+      );
+    }
+    await client.query("COMMIT");
+    res.json({ message: "Successfully updated prices", count: updates.length });
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Batch update error:", err);
+    res.status(500).json({ error: "Failed to update prices", details: err.message });
+  } finally {
+    client.release();
+  }
 });
 
 // Update a product
