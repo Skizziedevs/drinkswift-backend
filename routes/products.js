@@ -56,6 +56,8 @@ router.post("/", async (req, res) => {
       details: err.code === '23505' ? 'Duplicate entry' : err.message 
     });
   }
+});
+
 // Batch update product prices and stock status
 router.put("/batch-prices", async (req, res) => {
   const { updates } = req.body; // Array of { id, unitprice, packprice, soldOut }
