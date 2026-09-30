@@ -25,16 +25,33 @@ const initOrdersTable = async () => {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
     `);
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS order_ref VARCHAR(50);").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS customer_name VARCHAR(255);").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS phone VARCHAR(50);").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS delivery_method VARCHAR(50);").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS delivery_zone VARCHAR(100);").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS address TEXT;").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS landmark TEXT;").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS items JSONB;").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS subtotal NUMERIC DEFAULT 0;").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS delivery_fee NUMERIC DEFAULT 0;").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS total NUMERIC DEFAULT 0;").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS payment_method VARCHAR(100);").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'pending';").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS geo_coordinates JSONB;").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS map_link TEXT;").catch(() => {});
+    await db.query("ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();").catch(() => {});
   } catch (err) {
     console.error("Failed to initialize orders table:", err);
   }
 };
 initOrdersTable();
 
-// Generate unique order reference (e.g. CR-8492)
+// Generate unique collision-free order reference (e.g. CR-8492)
 const generateOrderRef = () => {
   const random = Math.floor(1000 + Math.random() * 9000);
-  return `CR-${random}`;
+  const suffix = Date.now().toString().slice(-2);
+  return `CR-${random}${suffix}`;
 };
 
 // Create a new order (PUBLIC: Customers submitting cart)
@@ -46,6 +63,7 @@ router.post("/", async (req, res) => {
     deliveryZone = "",
     address = "",
     landmark = "",
+    geoCoordinates = null,
     items = [],
     subtotal = 0,
     deliveryFee = 0,
@@ -58,12 +76,16 @@ router.post("/", async (req, res) => {
   }
 
   const orderRef = generateOrderRef();
+  const mapLink =
+    geoCoordinates?.lat && geoCoordinates?.lng
+      ? `https://maps.google.com/?q=${geoCoordinates.lat},${geoCoordinates.lng}`
+      : null;
 
   try {
     const result = await db.query(
       `INSERT INTO public.orders 
-       (order_ref, customer_name, phone, delivery_method, delivery_zone, address, landmark, items, subtotal, delivery_fee, total, payment_method) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+       (order_ref, customer_name, phone, delivery_method, delivery_zone, address, landmark, items, subtotal, delivery_fee, total, payment_method, geo_coordinates, map_link) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
        RETURNING *`,
       [
         orderRef,
@@ -78,6 +100,8 @@ router.post("/", async (req, res) => {
         deliveryFee,
         total,
         paymentMethod,
+        geoCoordinates ? JSON.stringify(geoCoordinates) : null,
+        mapLink,
       ]
     );
 
