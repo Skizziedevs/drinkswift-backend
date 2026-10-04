@@ -21,5 +21,8 @@ app.use("/api/orders", orderRoutes);
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
+const bundleRoutes = require("./routes/bundles");
+app.use("/api/bundles", bundleRoutes);
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Crates.ng backend running on port ${PORT}`));
