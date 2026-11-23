@@ -81,7 +81,59 @@ const INITIAL_BUNDLES_SEED = [
       "1x Carton Citrus / Soda Cans (12 x 50cl = 600 CL)"
     ],
     recipe: "Exact Centilitre (CL) Pour per Highball Glass:\n1. Fill highball glass with crystal ice cubes.\n2. Pour 3.5 CL Absolut Vodka.\n3. Add 3 CL Blue Curacao syrup (creates deep Caribbean electric blue).\n4. Top with 15 CL chilled Soda.\n5. Stir gently with bar spoon. Garnish with a lime wheel or maraschino cherry.\nTotal Liquid: 21.5 CL per cocktail. Yield: 25 Large Cocktails (or 40 cups with 2nd vodka bottle)!",
+    image: "/bundles/blue_lagoon.jpg"
+  },
+  {
+    id: "bundle-tequila-sunrise",
+    name: "Owambe Tequila Sunrise Party Pack",
+    type: "cocktail",
+    is_alcoholic: true,
+    category: "Cocktail Packs",
+    badge: "🌵 Fiesta Tequila • 1,175 CL Total",
+    emoji: "🍹",
+    price: 43500,
+    packprice: 43500,
+    unitprice: 43500,
+    packsize: 1,
+    size: "Full Cocktail Kit (1,175 CL Total • 35–40 Cocktails)",
+    servings: "Makes 35–40 Cocktails",
+    servings_count: 38,
+    cost_per_serving: "₦1,140 / Glass",
+    savings_highlight: "Lounges charge ₦4,000/glass • Save 71%!",
+    description: "Vibrant, high-energy party cocktail with genuine Sierra Tequila Silver, 10 packs of pure citrus juice, and layered Bardinet Grenadine syrup. Guaranteed crowd-pleaser.",
+    items: [
+      "1x Bottle Sierra Tequila Silver (Blanco) (70cl = 70 CL)",
+      "1x Carton Chivita Exotic / Citrus Juice (10 x 1 Liter = 1,000 CL)",
+      "1x Bottle Bardinet Grenadine Cocktail Syrup (1 Liter = 100 CL)"
+    ],
+    recipe: "Exact Centilitre (CL) Pour per Highball Glass:\n1. Fill glass with fresh ice cubes.\n2. Pour 3.5 CL Sierra Tequila Silver.\n3. Top with 15 CL chilled Orange/Citrus juice leaving 1 inch at top.\n4. Slowly pour 2 CL Bardinet Grenadine down the side so it settles into a sunset gradient.\n5. Do not stir before serving! Garnish with orange wheel.\nTotal Liquid: 20.5 CL per glass. Total Yield: 35–40 Generous Cocktails!",
     image: "/bundles/tequila_sunrise.jpg"
+  },
+  {
+    id: "bundle-whiskey-sour",
+    name: "VIP Jameson Highball & Whiskey Sour Pack",
+    type: "cocktail",
+    is_alcoholic: true,
+    category: "Cocktail Packs",
+    badge: "🥃 Executive Lounge • 867 CL Total",
+    emoji: "🥃",
+    price: 44500,
+    packprice: 44500,
+    unitprice: 44500,
+    packsize: 1,
+    size: "Full Cocktail Kit (867 CL Total • 25–30 Highballs)",
+    servings: "Makes 25–30 Highball Glasses",
+    servings_count: 25,
+    cost_per_serving: "₦1,780 / Glass",
+    savings_highlight: "VIP Lounges charge ₦6,000/glass • Save 70%!",
+    description: "Premium cocktail kit for upscale lounges, VIP sections, and house parties. Original Jameson Irish Whiskey paired with 24 cans of Schweppes sparkling soda mixer and aromatic bitters.",
+    items: [
+      "1x Bottle Jameson Irish Whiskey (75cl = 75 CL)",
+      "1x Carton Schweppes Soda Water (24 x 33cl Cans = 792 CL)",
+      "1x Bottle Appetite / Alomo Aromatic Bitters (75cl = 75 CL)"
+    ],
+    recipe: "Exact Centilitre (CL) Pour per Highball Glass:\n1. Fill glass with crystal ice rocks.\n2. Pour 3.5 CL Jameson Irish Whiskey.\n3. Add 2 dashes (0.5 CL) Bitters.\n4. Top with 15 CL chilled Schweppes Soda Water.\n5. Express fresh lemon twist over rim and stir gently.\nTotal Liquid: 19 CL per highball. Yield: 25 Bar-Standard Highballs!",
+    image: "/bundles/whiskey_sour.jpg"
   },
   {
     id: "bundle-tropical-rum-sunset",
@@ -108,7 +160,7 @@ const INITIAL_BUNDLES_SEED = [
       "1x Bottle Bardinet Grenadine Cocktail Syrup (1 Liter = 100 CL)"
     ],
     recipe: "Exact Centilitre (CL) Pour per 35cl Party Cup:\n1. Fill cup with crushed ice.\n2. Pour 3.5 CL Bull Rhum Dark Rhum.\n3. Pour 10 CL Chivita Exotic Pineapple & Coconut.\n4. Pour 7 CL 5Alive Pulpy Orange.\n5. Slowly drizzle 2 CL Bardinet Grenadine down the side so it settles into a sunset gradient.\nTotal Liquid: 22.5 CL per cup. Total Pack Volume: 1,643 CL = Over 50 Generous Party Cups!",
-    image: "/bundles/whiskey_sour.jpg"
+    image: "/bundles/rum_sunset.jpg"
   },
   {
     id: "bundle-baileys-dessert",
