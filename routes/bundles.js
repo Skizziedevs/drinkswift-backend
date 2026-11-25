@@ -407,6 +407,22 @@ const mapBundleRow = (row) => ({
   recipe: row.recipe,
   image: row.image,
   soldOut: Boolean(row.sold_out),
+  structuredIngredients: Array.isArray(row.structured_ingredients)
+    ? row.structured_ingredients
+    : typeof row.structured_ingredients === "string"
+    ? JSON.parse(row.structured_ingredients)
+    : [],
+  prepSteps: Array.isArray(row.prep_steps)
+    ? row.prep_steps
+    : typeof row.prep_steps === "string"
+    ? JSON.parse(row.prep_steps)
+    : [],
+  garnishSuggestions: Array.isArray(row.garnish_suggestions)
+    ? row.garnish_suggestions
+    : typeof row.garnish_suggestions === "string"
+    ? JSON.parse(row.garnish_suggestions)
+    : [],
+  baseVolumeLiters: Number(row.base_volume_liters) || 5,
   createdAt: row.created_at,
 });
 
